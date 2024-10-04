@@ -10,7 +10,9 @@ public class Bootstrap : MonoBehaviour
     [SerializeField] private WalletManager _walletManager;
     [SerializeField] private PlayerManager _playerManager;
     [SerializeField] private EnergyManager _energyManager;
-    [SerializeField] private PointManager _pointManager;
+    [SerializeField] private TextPointEffectManager _pointManager;
+
+    private UnityAction<float> _addedPoints;
 
     private void Awake()
     {
@@ -26,6 +28,6 @@ public class Bootstrap : MonoBehaviour
         _walletManager.Init();
         _playerManager.Init();
         _energyManager.Init(200);
-        _pointManager.Init();
+        _pointManager.Init(_addedPoints);
     }
 }

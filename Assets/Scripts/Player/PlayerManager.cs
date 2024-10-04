@@ -10,7 +10,7 @@ public class PlayerManager : MonoBehaviour, IService
     private float _requiredEnergyPerPress;
     private WalletManager _walletManager;
     private EnergyManager _energyManager;
-    private PointManager _pointManager;
+    private TextPointEffectManager _pointManager;
     private AutoclickerObjectPool _autoclickerObjectPool;
 
     public void Init()
@@ -18,7 +18,7 @@ public class PlayerManager : MonoBehaviour, IService
         var gameData = ServiceLocator.Instance.Get<GameData>();
         _walletManager = ServiceLocator.Instance.Get<WalletManager>();
         _energyManager = ServiceLocator.Instance.Get<EnergyManager>();
-        _pointManager = ServiceLocator.Instance.Get<PointManager>();
+        _pointManager = ServiceLocator.Instance.Get<TextPointEffectManager>();
 
         _amountOfMoneyPerTap = gameData.AmountOfMoneyPerTap;
         _requiredEnergyPerPress = gameData.RequiredEnergyPerPress;
@@ -51,6 +51,6 @@ public class PlayerManager : MonoBehaviour, IService
     private void ButtonClicked(float amount) 
     {
         _walletManager.AddMoneyBecomClickOrAutoclicker(amount);
-        _pointManager.OnClick(amount);
+        _pointManager.ReacToAction(amount);
     }
 }

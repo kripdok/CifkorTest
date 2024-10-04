@@ -1943,7 +1943,7 @@ GameObject:
   - component: {fileID: 1941012674}
   - component: {fileID: 1941012675}
   m_Layer: 0
-  m_Name: PointManagers
+  m_Name: TextPointEffectManagers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1976,8 +1976,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 050f38c7c6924da4cb1c449ba8580cb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pointPrefab: {fileID: 2431412217201823382, guid: 24b2afb0591a52c4f857285bfcb7dd95, type: 3}
-  _pointParant: {fileID: 1303907790}
+  Prefab: {fileID: 2431412217201823382, guid: 24b2afb0591a52c4f857285bfcb7dd95, type: 3}
+  Parent: {fileID: 1303907790}
 --- !u!1 &1969098719
 GameObject:
   m_ObjectHideFlags: 0
