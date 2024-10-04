@@ -1,1 +1,1 @@
-Настройки для ГМ находтяся в Asset/Settings/SettingsData
+Настройки для ГД находтяся в Asset/Settings/SettingsData
