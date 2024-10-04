@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: SettingsData
   m_EditorClassIdentifier: 
   <AmountOfMoneyPerTap>k__BackingField: 10
-  <RequiredEnergyPerPress>k__BackingField: 10
+  <RequiredEnergyPerTap>k__BackingField: 20
+  <MaxEnergyValue>k__BackingField: 1000
+  <RecoveryTimeOfOneUnitEnergy>k__BackingField: 0.1
   _autoclickers:
   - Name: Autoclicker1
     AmountOfMoney: 10

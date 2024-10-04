@@ -1,5 +1,4 @@
 using TMPro;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 public class WalletUI : MonoBehaviour
@@ -12,7 +11,7 @@ public class WalletUI : MonoBehaviour
     {
         _manager = ServiceLocator.Instance.Get<WalletManager>();
         ChangeText(startCount);
-        _manager.Test += ChangeText;
+        _manager.NumberChangesConfirmed += ChangeText;
     }
 
     private void OnDestroy()

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System.Collections;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -21,14 +22,13 @@ public class Autoclicker : AbstractCreatedObject
 
     private Tween tween;
     private UnityAction _loaded;
+    private WalletManager _walletManager;
     private float _price;
     private float _count;
     private float _rollbackTime;
     private float _costMultiplier;
     private float _amountOfMoney;
-
     private bool _isStartWork;
-    private WalletManager _walletManager;
 
     private void OnDestroy()
     {
@@ -41,6 +41,14 @@ public class Autoclicker : AbstractCreatedObject
     public void InitInformation(AutoclickerInfo info,UnityAction action)
     {
         _loaded = action;
+        _walletManager = ServiceLocator.Instance.Get<WalletManager>();
+        _button.onClick.AddListener(TryBuyNewCopy);
+        SetStartInformation(info);
+        SetText();
+    }
+
+    private void SetStartInformation(AutoclickerInfo info)
+    {
         _nameText.text = info.Name;
         _amountOfMoney = info.AmountOfMoney;
         _price = info.CostPerUnit;
@@ -50,9 +58,6 @@ public class Autoclicker : AbstractCreatedObject
         _errorImage.gameObject.SetActive(false);
         _count = 0;
         _loadBar.fillAmount = 0;
-        _walletManager = ServiceLocator.Instance.Get<WalletManager>();
-        _button.onClick.AddListener(TryBuyNewCopy);
-        SetText();
     }
 
     private void SetText()
@@ -62,20 +67,16 @@ public class Autoclicker : AbstractCreatedObject
         _profitNumberText.text = Profit.ToString();
     }
 
-    private IEnumerator Work()
+    private IEnumerator StartingWork()
     {
-        yield return null;
-
         while (true)
         {
             tween = _loadBar.DOFillAmount(1, _rollbackTime);
             yield return tween.WaitForCompletion();
             _loadBar.fillAmount = 0;
             _loaded?.Invoke();
-
         }
     }
-
 
     private async void TryBuyNewCopy()
     {
@@ -83,33 +84,43 @@ public class Autoclicker : AbstractCreatedObject
 
         if (!isSuccessful)
         {
-            _errorImage.gameObject.SetActive(true);
-            _button.interactable = false;
-            Sequence sequence = DOTween.Sequence();
-
-            sequence.Append(_errorImage.DOFillAmount(0, _errorDuration))
-                .Insert(0, _bacgroundImage.transform.DOPunchPosition(Vector3.one, _errorDuration));
-
-            await sequence.AsyncWaitForCompletion();
-
-
-            _errorImage.gameObject.SetActive(false);
-            _errorImage.fillAmount = 1;
-            _button.interactable = true;
+            await ReactToPurchaseError();
         }
         else
         {
-            _count++;
-            _price *= _costMultiplier;
-            SetText();
-
-            if (!_isStartWork)
-            {
-                _isStartWork = true;
-                StartCoroutine(Work());
-            }
+            Enlarge—opies();
         }
     }
 
+    private async Task ReactToPurchaseError()
+    {
+        _errorImage.gameObject.SetActive(true);
+        _button.interactable = false;
+        Sequence sequence = DOTween.Sequence();
 
+        sequence.Append(_errorImage.DOFillAmount(0, _errorDuration))
+            .Insert(0, _bacgroundImage.transform.DOPunchPosition(Vector3.one, _errorDuration));
+
+        await sequence.AsyncWaitForCompletion();
+        _errorImage.gameObject.SetActive(false);
+        _errorImage.fillAmount = 1;
+        _button.interactable = true;
+    }
+
+    private void Enlarge—opies()
+    {
+        _count++;
+        _price *= _costMultiplier;
+        SetText();
+        TryStartWork();
+    }
+
+    private void TryStartWork()
+    {
+        if (!_isStartWork)
+        {
+            _isStartWork = true;
+            StartCoroutine(StartingWork());
+        }
+    }
 }

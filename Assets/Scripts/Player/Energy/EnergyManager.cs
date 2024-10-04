@@ -1,37 +1,38 @@
 using System.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.Events;
 
-public class EnergyManager : MonoBehaviour, IService
+public class EnergyManager : IService
 {
-    [SerializeField] private EnergyUI _ui;
+    private EnergyUI _ui;
     private Energy _energy;
 
-    public TaskCompletionSource<bool> PurchaseTaskCompletion { get; private set; }
+    public TaskCompletionSource<bool> _taskCompletion { get; private set; }
 
     public UnityAction<float> CountChanged;
     public UnityAction<float> CountTryChanged;
 
-    public void Init(float maxValue)
+    public EnergyManager(EnergyUI ui)
     {
-        _energy = new Energy(maxValue);
-        _ui.Init(maxValue);
+        _ui = ui;
+        var gameData = ServiceLocator.Instance.Get<SettingsData>();
+        _energy = new Energy(this, gameData.MaxEnergyValue, gameData.RecoveryTimeOfOneUnitEnergy);
+        _ui.Init(this, gameData.MaxEnergyValue);
 
-        _energy.TransactionVerified += SetTransactionResult;
-        _energy.CountChangedWallet += ChangeUIElement;
+        _energy.CheckCompleted += SetTransactionResult;
+        _energy.ValuesHasChanged += ChangeUIElement;
     }
 
     public async Task<bool> TryChangeWallet(float count)
     {
-        PurchaseTaskCompletion = new TaskCompletionSource<bool>();
+        _taskCompletion = new TaskCompletionSource<bool>();
         CountTryChanged?.Invoke(count);
-        return await PurchaseTaskCompletion.Task;
+        return await _taskCompletion.Task;
     }
 
     private void SetTransactionResult(bool isResult)
     {
-        PurchaseTaskCompletion.TrySetResult(isResult);
-        
+        _taskCompletion.TrySetResult(isResult);
+
     }
 
     private void ChangeUIElement(float number)

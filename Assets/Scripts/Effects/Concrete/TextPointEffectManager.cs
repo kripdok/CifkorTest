@@ -1,22 +1,20 @@
-using UnityEngine.Events;
-
 public class TextPointEffectManager : AbstractEffectManager<TextPointEffect, PointObjectPool>
 {
-    private UnityAction<float> _action;
+    private GameManager _gameManager;
 
-    public void Init(UnityAction<float> action)
+    public void Init()
     {
+        _gameManager = ServiceLocator.Instance.Get<GameManager>();
         ObjectPool = new PointObjectPool(Prefab, 0, Parent);
-        _action = action;
-        _action += ReacToAction;
+        _gameManager.Action += ReacToAction;
     }
 
     private void OnDestroy()
     {
-        _action -= ReacToAction;
+        _gameManager.Action -= ReacToAction;
     }
 
-    public void ReacToAction(float pointNumber)
+    private void ReacToAction(float pointNumber)
     {
         var obj = ObjectPool.GetObject();
         obj.SetText(pointNumber);

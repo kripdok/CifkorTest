@@ -13,7 +13,7 @@ public class PressMeButton : MonoBehaviour
         _button.onClick.AddListener(action);
     }
 
-    public void OnDestroy()
+    private void OnDestroy()
     {
         _button.onClick.RemoveAllListeners();
     }

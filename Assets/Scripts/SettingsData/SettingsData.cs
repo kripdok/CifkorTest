@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SettingsData", menuName = "ScriptableObject/SettingsData", order = 1)]
-public class GameData : ScriptableObject, IService
+public class SettingsData : ScriptableObject, IService
 {
     [field: SerializeField] public float AmountOfMoneyPerTap { get; private set; }
+    [field: SerializeField] public float RequiredEnergyPerTap { get; private set; }
+    [field: SerializeField] public float MaxEnergyValue { get; private set; }
+    [field: SerializeField] public float RecoveryTimeOfOneUnitEnergy { get; private set; }
 
-    [field: SerializeField] public float RequiredEnergyPerPress { get; private set; }
 
     [SerializeField] private List<AutoclickerInfo> _autoclickers;
 
@@ -22,5 +24,5 @@ public struct AutoclickerInfo
     public float AmountOfMoney;
     public float RollbackTimeInSeconds;
     public float CostPerUnit;
-    [Range(1,10)] public float CostMultiplier;
+    [Range(1, 10)] public float CostMultiplier;
 }

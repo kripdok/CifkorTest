@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 public class ServiceLocator
@@ -14,14 +13,14 @@ public class ServiceLocator
             return;
 
         Instance = this;
-        _services = new Dictionary<string, IService>();    
+        _services = new Dictionary<string, IService>();
     }
 
     public static void Init()
     {
         Instance = new ServiceLocator();
     }
-    
+
     public void Register<T>(T service) where T : IService
     {
         var key = typeof(T).Name;

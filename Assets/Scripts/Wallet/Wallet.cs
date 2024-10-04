@@ -5,47 +5,46 @@ public class Wallet
 {
     private float _count;
     private WalletManager _manager;
-
     private TaskCompletionSource<bool> _task;
-    public UnityAction<float> CountChangedWallet;
-    public UnityAction<bool> TransactionVerified;
+
+    public UnityAction<float> ValuesHasChanged;
+    public UnityAction<bool> CheckCompleted;
 
     public Wallet(float startCount)
     {
+        _manager = ServiceLocator.Instance.Get<WalletManager>();
         _count = startCount;
 
-        _manager = ServiceLocator.Instance.Get<WalletManager>();
-        
-        _manager.CountTryChanged += TryToReduceTheMoney;
-        _manager.CountChanged += AddMoney;
+        _manager.CountTryChanged += TryToReduceValue;
+        _manager.CountChanged += AddAddValue;
     }
 
     ~Wallet()
     {
-        _manager.CountTryChanged -= TryToReduceTheMoney;
-        _manager.CountChanged -= AddMoney;
+        _manager.CountTryChanged -= TryToReduceValue;
+        _manager.CountChanged -= AddAddValue;
     }
 
-    public void AddMoney(float number)
+    public void AddAddValue(float amount)
     {
-        _count += number;
-        CountChangedWallet?.Invoke(_count);
+        _count += amount;
+        ValuesHasChanged?.Invoke(_count);
     }
 
-    public void TryToReduceTheMoney(float number)
+    public void TryToReduceValue(float amount)
     {
         bool isSuccessful = false;
 
-        if (_count - number < 0)
+        if (_count - amount < 0)
             isSuccessful = false;
         else
         {
-            _count -= number;
-            CountChangedWallet?.Invoke(_count);
+            _count -= amount;
+            ValuesHasChanged?.Invoke(_count);
             isSuccessful = true;
         }
 
-        TransactionVerified?.Invoke(isSuccessful);
+        CheckCompleted?.Invoke(isSuccessful);
     }
 
 }

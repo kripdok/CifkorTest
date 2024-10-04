@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,19 +9,19 @@ public class EnergyUI : MonoBehaviour
 
     private float _maxValue;
     private float _concreteValue;
-    private EnergyManager _energy;
+    private EnergyManager _manager;
 
-    public void Init(float maxValue)
+    public void Init(EnergyManager manager, float maxValue)
     {
         _maxValue = maxValue;
         ChangeValue(maxValue);
-        _energy = ServiceLocator.Instance.Get<EnergyManager>();
-        _energy.CountChanged += ChangeValue;
+        _manager = manager;
+        _manager.CountChanged += ChangeValue;
     }
 
     private void OnDestroy()
     {
-        _energy.CountChanged -= ChangeValue;
+        _manager.CountChanged -= ChangeValue;
     }
 
     private void ChangeValue(float concreteValue)
